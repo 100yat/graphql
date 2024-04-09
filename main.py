@@ -3,6 +3,7 @@ import motor.motor_asyncio
 import decimal
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
 from strawberry.asgi import GraphQL
 from typing import List, Optional
 from aio_pika import connect_robust, Message, DeliveryMode
@@ -57,31 +58,24 @@ class GraphUser:
 # class
 
 
-async def load_balance(addr):
-    # ok = await redis.set("key", "value")
-    # assert ok
-    b = await redis.get(addr)
-    print(int(b))
+async def get_balance(addr):
+    #ok = await redis.set("key", "value")
+    #assert ok
+    #b = await redis.get(addr)
+    b = 1
+    print(int(b), addr)
     return int(b)
 
-
-async def load_user(addr, name, cover, desc, sign):
+async def send_user(addr, name, cover, desc, sign):
     print(addr, name, cover, desc, sign)
     return None
 
-
-async def load_tx(amount, addr, msg, time, skip, limit) -> List[GraphTx]:
-    if amount >= 0:
-        amount_direction = "$gt"
-    else:
-        amount_direction = "$lt"
-        amount = -amount
-
-    if time >= 0:
-        time_direction = "$gt"
-    else:
-        time_direction = "$lt"
-        time = -amount
+async def get_tx(amount, addr, msg, time, skip, limit) -> List[GraphTx]:
+    if amount >= 0: amount_direction = '$gt'
+    else: amount_direction = '$lt'; amount = -amount
+    
+    if time >= 0: time_direction = '$gt'
+    else: time_direction = '$lt'; time = -amount
 
     q = {
         "amount": {amount_direction: amount},
@@ -107,11 +101,26 @@ async def load_tx(amount, addr, msg, time, skip, limit) -> List[GraphTx]:
         .to_list(None)
     ]
 
+async def send_tx(tx: Tx) -> str:
+    print(jsonable_encoder(tx))
+    return "ok"
 
 @strawberry.type
 class Query:
     @strawberry.field
-    async def tx(
+    async def getTx(
+        self,
+        msg: bool = None,
+        addr: str = '',
+        amount: int = 0,
+        time: int = 0,
+        skip: int = 0,
+        limit: int = 100
+    ) -> List[GraphTx]:
+        return await get_tx(amount, addr, msg, time, skip, limit)
+    
+    @strawberry.field
+    async def sendTx(
         self,
         msg: bool = None,
         addr: str = "",
@@ -120,10 +129,11 @@ class Query:
         skip: int = 0,
         limit: int = 100,
     ) -> List[GraphTx]:
-        return await load_tx(amount, addr, msg, time, skip, limit)
+        return await send_tx(amount, addr, msg, time, skip, limit)
+    
 
     @strawberry.field
-    async def user(
+    async def sendUser(
         self,
         addr: str = "",
         name: str = "",
@@ -131,11 +141,14 @@ class Query:
         desc: str = "",
         sign: str = "",
     ) -> None:
-        return await load_user(addr, name, cover, desc, sign)
+        return await send_user(addr, name, cover, desc, sign)
 
     @strawberry.field
-    async def balance(self, addr: str = "") -> float:
-        return await load_balance(addr)
+    async def getBalance(
+        self,
+        addr: str = ''
+    ) -> float:
+        return await get_balance(addr)
 
     @strawberry.field
     def getUser(self, _id: int) -> GraphUser:
