@@ -39,15 +39,15 @@ query = gql(
 for _ in range(0, 10):
     i = randint(0, 9)
     c = pk[i]
-    priv = sk[i]
+    private_key = sk[i]
     d = pk[randint(0, 9)]
     a = randint(100, 110)
     u = int(round(time.time() * 1000))
     m = str(randint(0, 100000))
     h = c + d + str(a) + str(m) + str(u)
 
-    priv = unhexlify(priv)
-    signing_key = SigningKey(priv)
+    private_key = unhexlify(private_key)
+    signing_key = SigningKey(private_key)
     message_bytes = bytes(h.encode("utf-8"))
     signed_hex = signing_key.sign(message_bytes, encoder=HexEncoder)
     s = signed_hex.decode("utf-8")

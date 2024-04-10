@@ -16,10 +16,10 @@ cli = MongoClient('localhost', 27017)
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 db = cli.yat
-db_tx= db.tx
-db_asks= db.asks
-db_votes= db.votes
-db_users= db.users
+db_tx = db.tx
+db_asks = db.asks
+db_votes = db.votes
+db_users = db.users
 
 asks = db_asks.find({})
 votes = db_votes.find({})
