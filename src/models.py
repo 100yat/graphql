@@ -1,4 +1,9 @@
+"""атрибут с типом Optional может принимать значение None"""
 from typing import Optional
+"""BaseModel из библиотеки Pydantiс для создания схемы данных (моделей) 
+с автоматической проверкой типов и валидацией данных.
+PositiveInt - тип данных - целые положительные числа.
+"""
 from pydantic import BaseModel, PositiveInt
 
 # Things
