@@ -32,7 +32,7 @@ message_bytes = bytes(m.encode("utf-8"))
 signed = base58.b58encode(signing_key.sign(message_bytes))
 hash_ask = tob2b(signed)
 
-a = Ask(addr = pk,
+ask = Ask(addr = pk,
     amount = amount,
     uniq = uniq,
     title = '',
@@ -43,17 +43,17 @@ a = Ask(addr = pk,
     hash = hash_ask,
     time = int(round(time.time() * 1000)))
 
-r = asks.insert_one(dict(a))
+r = asks.insert_one(dict(ask))
 if r.inserted_id: print(r.inserted_id)
 
 uniq = str(uuid.uuid4())
 like = True
-m = pk + str(hash_ask) + str(like) + str(uniq)
-message_bytes = bytes(m.encode("utf-8"))
+message = pk + str(hash_ask) + str(like) + str(uniq)
+message_bytes = bytes(message.encode("utf-8"))
 signed = base58.b58encode(signing_key.sign(message_bytes))
 hash_vote = tob2b(signed)
 
-v = Vote(addr = pk,
+vote = Vote(addr = pk,
     id = hash_ask,
     like = like,
     uniq = uniq,
@@ -62,8 +62,8 @@ v = Vote(addr = pk,
     hash = hash_vote,
     time = int(round(time.time() * 1000)))
 
-r = votes.insert_one(dict(v))
+r = votes.insert_one(dict(vote))
 if r.inserted_id: print(r.inserted_id)    
 
-print(a)
-print(v)
+print(ask)
+print(vote)

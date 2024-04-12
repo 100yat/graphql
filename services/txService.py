@@ -3,6 +3,7 @@ from src.graphqlModels import GraphTx
 from typing import List
 from fastapi.encoders import jsonable_encoder
 
+
 class TxService:
     def __init__(self, txs):
         self.txs = txs

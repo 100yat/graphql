@@ -18,7 +18,7 @@ asks = db.asks
 votes = db.votes
 
 user = userService.UserService()
-tx = txService.Tx(txs)
+tx = txService.TxService(txs)
 balance = balanceService.BalanceService()
 
 
