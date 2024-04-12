@@ -3,6 +3,7 @@ import motor.motor_asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from strawberry.asgi import GraphQL
+from strawberry.fastapi import GraphQLRouter
 from typing import List, Optional
 from aio_pika import connect_robust, Message, DeliveryMode
 import aioredis
@@ -94,7 +95,7 @@ class Query:
 
 schema = strawberry.Schema(query=Query)
 
-graphql_app = GraphQL(schema)  # graphiql=False
+graphql_app = GraphQLRouter(schema)  # graphiql=False
 
 app = FastAPI()
 
