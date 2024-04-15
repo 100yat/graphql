@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 tmux new-session -d 'uvicorn --port 9696 --reload --workers 4 main:app'
 sleep 1
 tmux split-window -h 'python turn.py'

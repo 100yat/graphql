@@ -13,13 +13,13 @@ logging.basicConfig(level=logging.ERROR, format=logfmt)
 logging.getLogger().setLevel(logging.INFO)
 
 cli = MongoClient('localhost', 27017)
-r = redis.Redis(host='localhost', port=6379, db=0)
+redis = redis.Redis(host='localhost', port=6379, db=0)
 
 db = cli.yat
-db_tx= db.tx
-db_asks= db.asks
-db_votes= db.votes
-db_users= db.users
+db_tx = db.tx
+db_asks = db.asks
+db_votes = db.votes
+db_users = db.users
 
 asks = db_asks.find({})
 votes = db_votes.find({})
@@ -94,4 +94,4 @@ for i in range(5):
     print(f'{i} Balances: {balances}')
 
 for b in balances:
-    r.set(b, balances[b])
+    redis.set(b, balances[b])

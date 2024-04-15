@@ -139,29 +139,29 @@ class Person:
         logging.warning(f"{time.time_ns()} Tx(debit={addr}, credit = {self.addr}, amount={amount})")
         tx.append(Tx(debit=addr, credit = self.addr, amount=amount))
 
-a = Person(addr = 'Foundation')
+person1 = Person(addr = 'Foundation')
 
-a.ask('1', 21000)
-a.vote('1')
+person1.ask('1', 21000)
+person1.vote('1')
 
-c = Person(addr = 'Alice')
-c.vote('1')
+person2 = Person(addr = 'Alice')
+person2.vote('1')
 
-b = Person(addr = 'Bob')
-b.ask('2', 1200)
-a.vote('2')
+person3 = Person(addr = 'Bob')
+person3.ask('2', 1200)
+person1.vote('2')
 
-c.ask('3', 2400)
-c.vote('3')
+person2.ask('3', 2400)
+person2.vote('3')
 
-a.ask('4', 10000)
-b.vote('4')
+person1.ask('4', 10000)
+person3.vote('4')
 
-a.send('Bob', 100)
+person1.send('Bob', 100)
 calc_tx()
-b.send('Alice', 250)
+person3.send('Alice', 250)
 calc_tx()
-a.send('Alice', 1000)
+person1.send('Alice', 1000)
 calc_tx()
 
 print('Balances:', balances)
