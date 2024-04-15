@@ -1,4 +1,4 @@
-class BalanceService:
+class BalanceController:
     def __init__(self):
         pass
 

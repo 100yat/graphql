@@ -1,10 +1,10 @@
-from src.models import Tx
-from src.graphqlModels import GraphTx
+from src.transaction.transactionModel import Tx
+from src.transaction.transactionModel import GraphTx
 from typing import List
 from fastapi.encoders import jsonable_encoder
 
 
-class TxService:
+class TransactionController:
     def __init__(self, txs):
         self.txs = txs
 

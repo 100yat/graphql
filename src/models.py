@@ -3,13 +3,6 @@ from pydantic import BaseModel, PositiveInt
 
 # Things
 
-class User(BaseModel):
-    addr: str
-    name: Optional[str]
-    cover: Optional[str]
-    desc: Optional[str]
-    sign: str
-
 class Token(BaseModel):
     creater: str
     amount: int
@@ -63,15 +56,7 @@ class Opt(BaseModel):
 
 
 # Actions
-class Tx(BaseModel):
-    credit: str
-    debit: str
-    amount: PositiveInt
-    uniq: str
-    sign: str
-    hash: Optional[str]
-    msg: Optional[str] = ''
-    time: Optional[int]
+
 
 class Move(BaseModel):
     credit: str
