@@ -3,6 +3,7 @@ from pydantic import BaseModel, PositiveInt
 
 # Things
 
+
 class Token(BaseModel):
     creater: str
     amount: int
@@ -15,6 +16,7 @@ class Token(BaseModel):
     hash: Optional[str]
     time: Optional[int]
 
+
 class NFT(BaseModel):
     creater: str
     img: str
@@ -25,16 +27,18 @@ class NFT(BaseModel):
     hash: Optional[str]
     time: Optional[int]
 
+
 class Ask(BaseModel):
     addr: str
     amount: PositiveInt
     uniq: str
     sign: str
-    title: Optional[str] = ''
-    cover: Optional[str] = ''
-    desc: Optional[str] = ''
+    title: Optional[str] = ""
+    cover: Optional[str] = ""
+    desc: Optional[str] = ""
     hash: Optional[str]
     time: Optional[int]
+
 
 class Fut(BaseModel):
     creater: str
@@ -42,8 +46,9 @@ class Fut(BaseModel):
     exp: int
     uniq: str
     sign: str
-    hash: Optional[str] #from sign
+    hash: Optional[str]  # from sign
     time: Optional[int]
+
 
 class Opt(BaseModel):
     creater: str
@@ -51,7 +56,7 @@ class Opt(BaseModel):
     exp: int
     uniq: str
     sign: str
-    hash: Optional[str] #from sign
+    hash: Optional[str]  # from sign
     time: Optional[int]
 
 
@@ -67,6 +72,7 @@ class Move(BaseModel):
     sign: str
     hash: Optional[str]
     time: Optional[int]
+
 
 class Vote(BaseModel):
     addr: str

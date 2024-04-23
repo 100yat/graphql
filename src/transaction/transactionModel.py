@@ -11,7 +11,7 @@ class Tx(BaseModel):
     uniq: str
     sign: str
     hash: Optional[str]
-    msg: Optional[str] = ''
+    msg: Optional[str] = ""
     time: Optional[int]
 
 

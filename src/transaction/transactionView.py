@@ -10,17 +10,18 @@ db = cli.yat
 txs = db.tx
 tx_controller = TransactionController(txs)
 
+
 @strawberry.type
 class TransactionQuery:
     @strawberry.field
     async def getTx(
         self,
         msg: bool = None,
-        addr: str = '',
+        addr: str = "",
         amount: int = 0,
         time: int = 0,
         skip: int = 0,
-        limit: int = 100
+        limit: int = 100,
     ) -> List[GraphTx]:
         return tx_controller.get_tx(amount, addr, msg, time, skip, limit)
 

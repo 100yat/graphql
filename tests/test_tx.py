@@ -39,7 +39,9 @@ for _ in range(0, 10):
     print(params)
     # Execute the query on the transport
     result = client.execute(query, variable_values=params)
-    #print(result)
+    # print(result)
     l = len(result["tx"])
-    if l == limit: print(f"Limit: {l} =  {limit}")
-    else: print(f"Limit: {l} !=  {limit}")
+    if l == limit:
+        print(f"Limit: {l} =  {limit}")
+    else:
+        print(f"Limit: {l} !=  {limit}")

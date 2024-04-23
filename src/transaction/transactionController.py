@@ -27,14 +27,16 @@ class TransactionController:
 
     def get_tx(self, amount, addr, msg, time, skip, limit) -> List[GraphTx]:
         if amount >= 0:
-            amount_direction = '$gt'
+            amount_direction = "$gt"
         else:
-            amount_direction = '$lt'; amount = -amount
+            amount_direction = "$lt"
+            amount = -amount
 
         if time >= 0:
-            time_direction = '$gt'
+            time_direction = "$gt"
         else:
-            time_direction = '$lt'; time = -amount
+            time_direction = "$lt"
+            time = -amount
 
         q = {
             "amount": {amount_direction: amount},

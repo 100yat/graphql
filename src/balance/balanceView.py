@@ -6,8 +6,5 @@ from src.balance.balanceController import BalanceController
 class BalanceQuery:
 
     @strawberry.field
-    async def getBalance(
-            self,
-            addr: str = ''
-    ) -> float:
+    async def getBalance(self, addr: str = "") -> float:
         return BalanceController().get_balance(addr)
