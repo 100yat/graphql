@@ -1,6 +1,6 @@
 #!/bin/sh
 tmux set-option -g mouse on
-tmux new-session -d 'uvicorn --port 9696 --reload --workers 4 main:app'
+tmux new-session -d 'uvicorn --port 9200 --reload --workers 4 main:app'
 sleep 1
 tmux set-option -g mouse on
 tmux split-window -h 'python turn.py'

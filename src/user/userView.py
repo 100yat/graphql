@@ -15,12 +15,12 @@ class UserQuery:
         cover: str = "",
         desc: str = "",
         sign: str = "",
-    ) -> bool:
+    ) -> GraphUser:
         return await UserController().send_user(addr, name, cover, desc, sign)
 
     @strawberry.field
-    async def getUser(self, _id: str) -> GraphUser:
-        return await UserController().get_user(_id)
+    async def getUser(self, Id: str) -> GraphUser:
+        return await UserController().get_user(str(Id))
 
     @strawberry.field
     async def allUser(self) -> list[GraphUser]:
@@ -28,5 +28,5 @@ class UserQuery:
         return users_res
 
     @strawberry.field()
-    def get_all_user_contacts(self, user_id: int) -> GraphUser:
+    def get_all_user_contacts(self, user_id: str) -> GraphUser:
         return UserController().get_all_user_contacts(user_id)
