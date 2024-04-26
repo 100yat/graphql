@@ -5,22 +5,31 @@ import decimal
 
 
 class Tx(BaseModel):
-    credit: str
-    debit: str
-    amount: PositiveInt
-    uniq: str
-    sign: str
-    hash: Optional[str]
-    msg: Optional[str] = ""
-    time: Optional[int]
+    Id: Optional[str] = None
+    addr: Optional[str] = None
+    credit: str = None
+    debit: str = None
+    amount: Optional[PositiveInt] = None
+    uniq: str = None
+    sign: str = None
+    hash: Optional[str] = None
+    msg: Optional[str] = None
+    time: Optional[int] = None
+    fromUserId: Optional[str] = None
+    toUserId: Optional[str] = None
 
 
 @strawberry.experimental.pydantic.type(model=Tx)
 class GraphTx:
-    credit: Optional[str]
-    debit: Optional[str]
-    amount: Optional[float]
-    time: Optional[decimal.Decimal]
-    sign: Optional[str]
-    hash: strawberry.auto
-    msg: strawberry.auto
+    Id: Optional[str] = None
+    addr: Optional[str] = None
+    credit: Optional[str] = None
+    debit: Optional[str] = None
+    amount: Optional[float] = None
+    time: Optional[decimal.Decimal] = None
+    sign: Optional[str] = None
+    uniq: str = None
+    hash: strawberry.auto = None
+    msg: strawberry.auto = None
+    fromUserId: Optional[str] = None
+    toUserId: Optional[str] = None

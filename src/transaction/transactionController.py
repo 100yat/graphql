@@ -1,18 +1,19 @@
-from src.transaction.transactionModel import Tx
-from src.transaction.transactionModel import GraphTx
+from pprint import pprint
+
+from src.transaction.transactionModel import Tx, GraphTx
+from motor.motor_asyncio import AsyncIOMotorCollection
 from typing import List
+from src.user.userModel import User
 from fastapi.encoders import jsonable_encoder
+from bson import ObjectId
 
 
 class TransactionController:
-    def __init__(self, txs):
-        self.txs = txs
+    def __init__(self, db: AsyncIOMotorCollection):
+        self.txs: AsyncIOMotorCollection = db.tx
+        self.users: AsyncIOMotorCollection = db.users
 
     def get_all_TX(self):
-        """
-
-        :return:
-        """
         return [
             GraphTx(
                 credit="123",
@@ -62,9 +63,37 @@ class TransactionController:
             .to_list(None)
         ]
 
-    def send_tx(self, tx: Tx):
-        print(jsonable_encoder(tx))
-        return "ok"
+    async def send_tx(self, tx: Tx):
+        tx_write = await self.txs.insert_one(tx.dict())
+
+        cursor_from_user = await self.users.find_one({"_id": ObjectId(tx.fromUserId)})
+        cursor_to_user = await self.users.find_one({"_id": ObjectId(tx.toUserId)})
+        pprint(cursor_from_user)
+        if not cursor_from_user:
+            return "not found from User"
+        if not cursor_to_user:
+            return "not found to User"
+        from_user = User(**cursor_from_user)
+        from_user.Id = str(cursor_from_user.get("_id"))
+        to_user = User(**cursor_to_user)
+        to_user.Id = str(cursor_to_user.get("_id"))
+
+        if tx_write.acknowledged:
+            from_user.balance -= tx.amount
+            to_user.balance += tx.amount
+            cursor_from_user_update = await self.users.update_one({"_id": ObjectId(from_user.Id)},
+                                                                  {"$set": {"balance": from_user.balance}})
+            cursor_to_user_update = await self.users.update_one({"_id": ObjectId(to_user.Id)},
+                                                                  {"$set": {"balance": to_user.balance}})
+            print(from_user.Id)
+            print(tx.amount)
+            print(from_user.balance)
+            print("cursor_from_user_update ", cursor_from_user_update.modified_count)
+            print("cursor_to_user_update ", cursor_to_user_update.modified_count)
+            tx_id = tx_write.inserted_id
+            graph_tx = GraphTx(**tx.dict())
+            return graph_tx
+        return "error"
 
     def get_TX_by_user(self, user_id):
         return GraphTx(

@@ -1,12 +1,13 @@
 import strawberry
 from typing import Optional
 from pydantic import BaseModel
+from src.transaction.transactionModel import Tx, GraphTx
 
 
 @strawberry.type
 class GraphUser:
     # User()
-    _id: Optional[str] = None
+    Id: Optional[str] = None
     addr: str
     name: Optional[str]
     cover: Optional[str]
@@ -14,12 +15,12 @@ class GraphUser:
     description: Optional[str] = None
     sign: str
     image: Optional[str] = None
-    balance: Optional[str] = None
+    balance: Optional[int] = 0
     contacts: Optional[str] = None
 
 
 class User(BaseModel):
-    _id: Optional[str] = None
+    Id: Optional[str] = None
     addr: str
     name: Optional[str]
     cover: Optional[str]
@@ -27,5 +28,5 @@ class User(BaseModel):
     description: Optional[str] = None
     sign: str
     image: Optional[str] = None
-    balance: Optional[str] = None
+    balance: Optional[int] = 0
     contacts: Optional[str] = None

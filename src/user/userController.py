@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from src.user.userModel import GraphUser, User
 import main
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -78,7 +76,7 @@ class UserController:
             userModel.dict()
         )
         if user.acknowledged:
-            userModel._id = user.inserted_id
-            graph_user = GraphUser(_id=user.inserted_id, addr=addr, name=name, cover=cover, desc=desc, sign=sign)
+            userModel.Id = user.inserted_id
+            graph_user = GraphUser(Id=user.inserted_id, addr=addr, name=name, cover=cover, desc=desc, sign=sign)
             return graph_user
         return "error"
