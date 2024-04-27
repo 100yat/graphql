@@ -4,6 +4,7 @@ from src.transaction.transactionModel import Tx, GraphTx
 from motor.motor_asyncio import AsyncIOMotorCollection
 from typing import List
 from src.user.userModel import User
+from src.transaction.transactionModel import Tx, GraphTx
 from fastapi.encoders import jsonable_encoder
 from bson import ObjectId
 
@@ -13,6 +14,7 @@ class TransactionController:
         self.txs: AsyncIOMotorCollection = db.tx
         self.users: AsyncIOMotorCollection = db.users
 
+"""
     def get_all_TX(self):
         return [
             GraphTx(
@@ -25,6 +27,14 @@ class TransactionController:
                 sign="sign что бы это не значило",
             )
         ]
+"""
+    async def get_all_TX(self) -> List[GraphTx]:
+        all_TX = []
+        txs_q = self.txs.find()
+        async for t in txs_q:
+            all_TX.append(GraphTx(**t, id=t['_id']))
+        return all_TX
+
 
     def get_tx(self, amount, addr, msg, time, skip, limit) -> List[GraphTx]:
         if amount >= 0:
@@ -94,7 +104,7 @@ class TransactionController:
             graph_tx.Id = tx_id
             return graph_tx
         return "error"
-
+"""
     def get_TX_by_user(self, user_id):
         return GraphTx(
             credit="123",
@@ -105,7 +115,13 @@ class TransactionController:
             msg="message qwe123",
             sign="sign что бы это не значило",
         )
+"""
+    async def get_TX_by_user(self, user_id: ObjectId) -> GraphTx:
+        t_q = await self.txs.find_one({'_id': ObjectId(user_id)})
+        if t_q:
+            return GraphTx(**t_q, id=t_q['_id'])
 
+"""
     def get_TX_by_id(self):
         return GraphTx(
             credit="123",
@@ -116,3 +132,8 @@ class TransactionController:
             msg="message qwe123",
             sign="sign что бы это не значило",
         )
+"""
+    async def get_TX_by_id(self, _id: ObjectId) -> GraphTx:
+        t_q = await self.txs.find_one({'_id': ObjectId(tx_id)})
+        if t_q:
+            return GraphTx(**t_q, id=t_q['_id'])

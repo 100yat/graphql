@@ -58,3 +58,6 @@ class TransactionQuery:
     @strawberry.field
     def get_TX_by_user(self, user_id: int) -> GraphTx:
         return tx_controller.get_TX_by_user(user_id)
+
+
+schema = strawberry.Schema(query=TransactionQuery) # кажется это должно быть здесь
