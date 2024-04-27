@@ -30,8 +30,8 @@ class TransactionQuery:
         self,
         addr: str,
         amount: int,
-        fromUserId: str,
-        toUserId: str,
+        credit: str,
+        debit: str,
         msg: str = None,
         time: int = 0,
         skip: int = 0,
@@ -43,8 +43,8 @@ class TransactionQuery:
                 time=time,
                 skip=skip,
                 limit=limit,
-                fromUserId=fromUserId,
-                toUserId=toUserId)
+                credit=credit,
+                debit=debit)
         return await tx_controller.send_tx(tx)
 
     @strawberry.field

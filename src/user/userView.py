@@ -3,6 +3,7 @@ from pprint import pprint
 import strawberry
 from src.user.userController import UserController
 from src.user.userModel import GraphUser
+from typing import AsyncGenerator
 
 
 @strawberry.type
@@ -30,3 +31,10 @@ class UserQuery:
     @strawberry.field()
     def get_all_user_contacts(self, user_id: str) -> GraphUser:
         return UserController().get_all_user_contacts(user_id)
+
+
+@strawberry.type
+class UserSubscription:
+    @strawberry.subscription()
+    async def getUserWs(self, userId: str) -> AsyncGenerator[GraphUser, None]:
+        return UserController().get_user_ws(str(userId))

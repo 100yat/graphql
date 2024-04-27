@@ -64,34 +64,34 @@ class TransactionController:
         ]
 
     async def send_tx(self, tx: Tx):
-        tx_write = await self.txs.insert_one(tx.dict())
-
-        cursor_from_user = await self.users.find_one({"_id": ObjectId(tx.fromUserId)})
-        cursor_to_user = await self.users.find_one({"_id": ObjectId(tx.toUserId)})
-        pprint(cursor_from_user)
-        if not cursor_from_user:
+        cursor_credit_user = await self.users.find_one({"addr": tx.credit})
+        cursor_debit_user = await self.users.find_one({"addr": tx.debit})
+        pprint(cursor_credit_user)
+        if not cursor_credit_user:
             return "not found from User"
-        if not cursor_to_user:
+        if not cursor_debit_user:
             return "not found to User"
-        from_user = User(**cursor_from_user)
-        from_user.Id = str(cursor_from_user.get("_id"))
-        to_user = User(**cursor_to_user)
-        to_user.Id = str(cursor_to_user.get("_id"))
+        credit_user = User(**cursor_credit_user)
+        credit_user.Id = str(cursor_credit_user.get("addr"))
+        debit_user = User(**cursor_debit_user)
+        debit_user.Id = str(cursor_debit_user.get("addr"))
 
+        tx_write = await self.txs.insert_one(tx.dict())
         if tx_write.acknowledged:
-            from_user.balance -= tx.amount
-            to_user.balance += tx.amount
-            cursor_from_user_update = await self.users.update_one({"_id": ObjectId(from_user.Id)},
-                                                                  {"$set": {"balance": from_user.balance}})
-            cursor_to_user_update = await self.users.update_one({"_id": ObjectId(to_user.Id)},
-                                                                  {"$set": {"balance": to_user.balance}})
-            print(from_user.Id)
+            credit_user.balance -= tx.amount
+            debit_user.balance += tx.amount
+            cursor_credit_user_update = await self.users.update_one({"addr": credit_user.Id},
+                                                                  {"$set": {"balance": credit_user.balance}})
+            cursor_debit_user_update = await self.users.update_one({"addr": debit_user.Id},
+                                                                  {"$set": {"balance": debit_user.balance}})
+            print(credit_user.Id)
             print(tx.amount)
-            print(from_user.balance)
-            print("cursor_from_user_update ", cursor_from_user_update.modified_count)
-            print("cursor_to_user_update ", cursor_to_user_update.modified_count)
+            print(credit_user.balance)
+            print("cursor_from_user_update ", cursor_credit_user_update.modified_count)
+            print("cursor_to_user_update ", cursor_debit_user_update.modified_count)
             tx_id = tx_write.inserted_id
             graph_tx = GraphTx(**tx.dict())
+            graph_tx.Id = tx_id
             return graph_tx
         return "error"
 

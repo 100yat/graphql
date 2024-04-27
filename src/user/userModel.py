@@ -2,6 +2,7 @@ import strawberry
 from typing import Optional
 from pydantic import BaseModel
 from src.transaction.transactionModel import Tx, GraphTx
+from bson import ObjectId
 
 
 @strawberry.type

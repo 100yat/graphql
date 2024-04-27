@@ -1,6 +1,8 @@
+from pprint import pprint
+
 from src.user.userModel import GraphUser, User
 import main
-from motor.motor_asyncio import AsyncIOMotorCollection
+from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorChangeStream
 from typing import Any
 from bson import ObjectId
 
@@ -57,11 +59,33 @@ class UserController:
         return result
 
     async def get_user(self, Id: str):
-        # if Id == "1":
-        #     self.send_user()
-
         cursor = await self.users.find_one({"_id": ObjectId(Id)})
-        return User(**cursor)
+        user = User(**cursor)
+        user.Id = cursor.get("_id")
+        return user
+
+    async def get_user_ws(self, Id: str):
+        #TODO Возможно сделать пул со сравнением какую коллекцию отслеживать
+        async with self.users.watch() as stream:
+            stream: AsyncIOMotorChangeStream
+            # while stream.next():
+            #     pprint(stream)
+            async for change in stream:
+                print("change")
+                pprint(change)
+                _id_user_event = ObjectId(change["documentKey"]["_id"])
+                updateFields = change["updateDescription"]["updatedFields"]
+                print(f"Id {Id}")
+                print(f"_id_user_event {_id_user_event}")
+                print(f"updateFields.keys() {list(updateFields.keys())}")
+                print(f"\"balance\" in updateFields.keys() {'balance' in list(updateFields.keys())}")
+                if Id == str(_id_user_event) and "balance" in list(updateFields.keys()):
+                    cursor = await self.users.find_one({"_id": _id_user_event})
+                    user = User(**cursor)
+                    user.Id = cursor.get("_id")
+                    print("Делаем елд")
+                    yield user
+        # return user
 
     async def send_user(self, addr, name, cover, desc, sign) -> Any:
         # TODO Здесь нужно использовать GraphUser который использует @strawberry.mutations

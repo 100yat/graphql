@@ -15,8 +15,8 @@ class Tx(BaseModel):
     hash: Optional[str] = None
     msg: Optional[str] = None
     time: Optional[int] = None
-    fromUserId: Optional[str] = None
-    toUserId: Optional[str] = None
+    # fromUserId: Optional[str] = None
+    # toUserId: Optional[str] = None
 
 
 @strawberry.experimental.pydantic.type(model=Tx)
@@ -31,5 +31,5 @@ class GraphTx:
     uniq: str = None
     hash: strawberry.auto = None
     msg: strawberry.auto = None
-    fromUserId: Optional[str] = None
-    toUserId: Optional[str] = None
+    # fromUserId: Optional[str] = None
+    # toUserId: Optional[str] = None
