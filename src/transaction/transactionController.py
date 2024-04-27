@@ -14,20 +14,6 @@ class TransactionController:
         self.txs: AsyncIOMotorCollection = db.tx
         self.users: AsyncIOMotorCollection = db.users
 
-"""
-    def get_all_TX(self):
-        return [
-            GraphTx(
-                credit="123",
-                debit="321",
-                amount=123.456,
-                time=1234567890,
-                hash="123qwe",
-                msg="message qwe123",
-                sign="sign что бы это не значило",
-            )
-        ]
-"""
     async def get_all_TX(self) -> List[GraphTx]:
         all_TX = []
         txs_q = self.txs.find()
@@ -104,36 +90,14 @@ class TransactionController:
             graph_tx.Id = tx_id
             return graph_tx
         return "error"
-"""
-    def get_TX_by_user(self, user_id):
-        return GraphTx(
-            credit="123",
-            debit="321",
-            amount=123.456,
-            time=1234567890,
-            hash="123qwe",
-            msg="message qwe123",
-            sign="sign что бы это не значило",
-        )
-"""
+
     async def get_TX_by_user(self, user_id: ObjectId) -> GraphTx:
         t_q = await self.txs.find_one({'_id': ObjectId(user_id)})
         if t_q:
             return GraphTx(**t_q, id=t_q['_id'])
 
-"""
-    def get_TX_by_id(self):
-        return GraphTx(
-            credit="123",
-            debit="321",
-            amount=123.456,
-            time=1234567890,
-            hash="123qwe",
-            msg="message qwe123",
-            sign="sign что бы это не значило",
-        )
-"""
     async def get_TX_by_id(self, _id: ObjectId) -> GraphTx:
-        t_q = await self.txs.find_one({'_id': ObjectId(tx_id)})
+        t_q = await self.txs.find_one({'_id': ObjectId(_id)})
         if t_q:
             return GraphTx(**t_q, id=t_q['_id'])
+        return GraphTx()
